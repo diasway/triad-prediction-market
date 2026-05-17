@@ -1,0 +1,41 @@
+name: ci
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-test-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Node dependencies
+        run: npm ci || npm install
+      - name: Install Foundry dependencies
+        run: forge install OpenZeppelin/openzeppelin-contracts OpenZeppelin/openzeppelin-contracts-upgradeable foundry-rs/forge-std --no-commit
+      - name: Forge format check
+        run: forge fmt --check
+      - name: Solhint and Prettier
+        run: npm run lint
+      - name: Build
+        run: forge build
+      - name: Tests
+        run: forge test -vvv
+      - name: Coverage
+        run: forge coverage --report lcov
+      - name: Install Slither
+        run: pipx install slither-analyzer
+      - name: Slither
+        run: slither . --config-file slither.config.json --fail-high --fail-medium
+      - name: Frontend build
+        working-directory: frontend
+        run: npm ci || npm install && npm run build

@@ -1,0 +1,45 @@
+type Market @entity(immutable: false) {
+  id: ID!
+  marketId: BigInt!
+  market: Bytes!
+  amm: Bytes!
+  yesId: BigInt!
+  noId: BigInt!
+  state: String!
+  createdAt: BigInt!
+}
+
+type Trade @entity(immutable: true) {
+  id: ID!
+  trader: Bytes!
+  market: Market!
+  tokenIn: BigInt!
+  amountIn: BigInt!
+  amountOut: BigInt!
+  blockNumber: BigInt!
+}
+
+type LiquidityPosition @entity(immutable: false) {
+  id: ID!
+  provider: Bytes!
+  market: Market!
+  lpBalance: BigInt!
+  updatedAt: BigInt!
+}
+
+type VaultDeposit @entity(immutable: true) {
+  id: ID!
+  user: Bytes!
+  assets: BigInt!
+  shares: BigInt!
+  blockNumber: BigInt!
+}
+
+type ProposalSnapshot @entity(immutable: false) {
+  id: ID!
+  proposalId: BigInt!
+  proposer: Bytes!
+  state: String!
+  votesFor: BigInt!
+  votesAgainst: BigInt!
+}

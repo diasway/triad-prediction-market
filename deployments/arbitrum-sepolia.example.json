@@ -1,0 +1,11 @@
+{
+  "network": "arbitrum-sepolia",
+  "chainId": 421614,
+  "triadToken": "0xREPLACE_AFTER_DEPLOY",
+  "timelock": "0xREPLACE_AFTER_DEPLOY",
+  "governor": "0xREPLACE_AFTER_DEPLOY",
+  "factory": "0xREPLACE_AFTER_DEPLOY",
+  "feeVault": "0xREPLACE_AFTER_DEPLOY",
+  "treasuryProxy": "0xREPLACE_AFTER_DEPLOY",
+  "verified": false
+}
