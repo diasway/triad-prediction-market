@@ -8,8 +8,6 @@
     "not-rely-on-time": "off",
     "no-inline-assembly": "off",
     "avoid-low-level-calls": "off",
-    "custom-errors": "off",
-    "gas-custom-errors": "off",
     "no-empty-blocks": "off"
   }
 }

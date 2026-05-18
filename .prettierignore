@@ -1,0 +1,16 @@
+node_modules/
+frontend/node_modules/
+
+lib/
+out/
+cache/
+broadcast/
+
+.env
+frontend/.env
+
+coverage/
+lcov.info
+
+*.pdf
+*.pptx
