@@ -125,48 +125,54 @@ The Governor parameters are set to the project specification: voting delay 1 day
 ## 7. Storage layout
 
 ### TriadToken
+
 - Inherits ERC20, ERC20Permit, ERC20Votes.
 - No custom mutable storage except inherited token and vote checkpoint state.
 - MAX_SUPPLY is constant and does not occupy a storage slot.
 
 ### OutcomeToken
+
 - Inherits ERC1155 and AccessControl.
 - Role mappings are stored by AccessControl.
 - ERC1155 balances are keyed by token ID and owner.
 
 ### PredictionMarket
-| Slot concept | Variable |
-|---|---|
+
+| Slot concept          | Variable                                                                   |
+| --------------------- | -------------------------------------------------------------------------- |
 | Immutable code values | collateral, outcomeToken, oracle, yesId, noId, threshold, disputeWindowEnd |
-| Mutable state | state, winningYes, totalCollateralLocked |
+| Mutable state         | state, winningYes, totalCollateralLocked                                   |
 
 Immutable variables are embedded in bytecode and cannot collide with upgradeable storage. The market is intentionally non-upgradeable because each market should be immutable after creation.
 
 ### OutcomeAMM
-| Slot concept | Variable |
-|---|---|
+
+| Slot concept         | Variable                                       |
+| -------------------- | ---------------------------------------------- |
 | Immutable references | collateral, outcomeToken, lpToken, yesId, noId |
-| Reserve state | yesReserve, noReserve, accumulatedFees |
-| Access control | inherited AccessControl role data |
+| Reserve state        | yesReserve, noReserve, accumulatedFees         |
+| Access control       | inherited AccessControl role data              |
 
 ### ProtocolFeeVault
+
 - Inherits ERC4626 and ERC20 share accounting.
 - AccessControl stores pauser/strategist roles.
 - No custom asset accounting is duplicated beyond ERC4626 functions.
 
 ### UpgradeableTreasury V1 -> V2
+
 V1 defines `_accountedBalance` and a 49-slot storage gap. V2 adds no new storage except emitted event logic and uses the inherited mapping. The storage gap prevents future collision. V2 changes behavior only by adding `correctAccounting`, restricted to TREASURER_ROLE.
 
 ## 8. Access-control model
 
-| Component | Privileged role | Authority |
-|---|---|---|
-| MarketFactory | MARKET_CREATOR_ROLE | Create markets |
-| OutcomeToken | MINTER_ROLE/BURNER_ROLE | Mint/burn outcome shares |
-| PredictionMarket | RESOLVER_ROLE/PAUSER_ROLE | Resolve or cancel market |
-| ProtocolFeeVault | PAUSER_ROLE | Pause deposits/withdrawals |
+| Component           | Privileged role              | Authority                                        |
+| ------------------- | ---------------------------- | ------------------------------------------------ |
+| MarketFactory       | MARKET_CREATOR_ROLE          | Create markets                                   |
+| OutcomeToken        | MINTER_ROLE/BURNER_ROLE      | Mint/burn outcome shares                         |
+| PredictionMarket    | RESOLVER_ROLE/PAUSER_ROLE    | Resolve or cancel market                         |
+| ProtocolFeeVault    | PAUSER_ROLE                  | Pause deposits/withdrawals                       |
 | UpgradeableTreasury | UPGRADER_ROLE/TREASURER_ROLE | Upgrade implementation, withdraw accounted funds |
-| Timelock | PROPOSER/CANCELLER | Queue and execute governance actions |
+| Timelock            | PROPOSER/CANCELLER           | Queue and execute governance actions             |
 
 The target production design transfers admin powers to Timelock. Individual EOAs should not retain critical admin roles after deployment.
 
@@ -181,28 +187,33 @@ The target production design transfers admin powers to Timelock. Individual EOAs
 ## 10. Design decision records
 
 ### ADR-01: Constant-product AMM instead of LMSR
+
 Context: The rubric requires AMM pricing.  
 Options: LMSR, CPMM.  
 Decision: CPMM because it is easier to test with invariants.  
 Consequence: Liquidity can be shallow near extremes, so UI must warn about slippage.
 
 ### ADR-02: ERC1155 for outcome shares
+
 Context: Every market needs YES and NO tokens.  
 Options: ERC20 pair per market, ERC1155 IDs.  
 Decision: ERC1155 because token IDs scale better across many markets.  
 Consequence: Frontend must handle `setApprovalForAll` and token ID display.
 
 ### ADR-03: Timelock owns treasury permissions
+
 Context: The rubric requires treasury under governance.  
 Decision: Timelock is the final authority for treasury-level operations.  
 Consequence: Emergency operations are slower but more transparent.
 
 ### ADR-04: UUPS only for treasury
+
 Context: Markets should be immutable, but treasury policy may evolve.  
 Decision: Upgrade only the treasury through UUPS.  
 Consequence: Lower upgrade risk for market logic while still satisfying upgradeability.
 
 ### ADR-05: Oracle adapter abstraction
+
 Context: Direct feed calls spread staleness logic.  
 Decision: A dedicated `ChainlinkPriceOracle` validates positivity, round completeness, and freshness.  
 Consequence: All market resolution uses the same oracle safety checks.

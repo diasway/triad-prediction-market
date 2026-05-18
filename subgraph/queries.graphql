@@ -1,14 +1,51 @@
 # 1. Latest markets
-{ markets(first: 10, orderBy: createdAt, orderDirection: desc) { id marketId market amm state yesId noId } }
+{
+  markets(first: 10, orderBy: createdAt, orderDirection: desc) {
+    id
+    marketId
+    market
+    amm
+    state
+    yesId
+    noId
+  }
+}
 
 # 2. Trades for one market
-{ trades(where: { market: "1" }, orderBy: blockNumber, orderDirection: desc) { trader tokenIn amountIn amountOut } }
+{
+  trades(where: { market: "1" }, orderBy: blockNumber, orderDirection: desc) {
+    trader
+    tokenIn
+    amountIn
+    amountOut
+  }
+}
 
 # 3. LP positions
-{ liquidityPositions(where: { market: "1" }) { provider lpBalance updatedAt } }
+{
+  liquidityPositions(where: { market: "1" }) {
+    provider
+    lpBalance
+    updatedAt
+  }
+}
 
 # 4. Vault deposits
-{ vaultDeposits(first: 20, orderBy: blockNumber, orderDirection: desc) { user assets shares } }
+{
+  vaultDeposits(first: 20, orderBy: blockNumber, orderDirection: desc) {
+    user
+    assets
+    shares
+  }
+}
 
 # 5. Governance snapshots
-{ proposalSnapshots(first: 10) { proposalId proposer state votesFor votesAgainst } }
+{
+  proposalSnapshots(first: 10) {
+    proposalId
+    proposer
+    state
+    votesFor
+    votesAgainst
+  }
+}

@@ -165,7 +165,9 @@ function Dashboard() {
         }
       `)
       .then((r) => setMarkets(r.markets || []))
-      .catch(() => setError("Could not load subgraph data. Check subgraph URL."));
+      .catch(() =>
+        setError("Could not load subgraph data. Check subgraph URL."),
+      );
   }, []);
 
   if (!address) {
@@ -209,14 +211,10 @@ function Dashboard() {
         <h2>Governance</h2>
 
         <p>
-          TRIAD balance:{" "}
-          {balance.data ? formatUnits(balance.data, 18) : "0"}
+          TRIAD balance: {balance.data ? formatUnits(balance.data, 18) : "0"}
         </p>
 
-        <p>
-          Voting power:{" "}
-          {votes.data ? formatUnits(votes.data, 18) : "0"}
-        </p>
+        <p>Voting power: {votes.data ? formatUnits(votes.data, 18) : "0"}</p>
 
         <p>Delegate: {delegate.data || "not delegated"}</p>
 
@@ -228,7 +226,7 @@ function Dashboard() {
                 abi: erc20VotesAbi,
                 functionName: "delegate",
                 args: [address],
-              })
+              }),
             )
           }
         >
@@ -262,18 +260,30 @@ function Dashboard() {
                 abi: governorAbi,
                 functionName: "castVote",
                 args: [1n, 1],
-              })
+              }),
             )
           }
         >
           Vote For Proposal #1
         </button>
 
-        <button onClick={() => alert("Deposit flow is connected after deployed market address is selected.")}>
+        <button
+          onClick={() =>
+            alert(
+              "Deposit flow is connected after deployed market address is selected.",
+            )
+          }
+        >
           Deposit collateral
         </button>
 
-        <button onClick={() => alert("Swap flow is connected after deployed AMM address is selected.")}>
+        <button
+          onClick={() =>
+            alert(
+              "Swap flow is connected after deployed AMM address is selected.",
+            )
+          }
+        >
           Swap outcome shares
         </button>
       </section>

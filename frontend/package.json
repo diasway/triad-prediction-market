@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "scripts": {"dev": "vite", "build": "vite build", "preview": "vite preview", "lint": "prettier --check src"},
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "prettier --check src"
+  },
   "dependencies": {
     "@rainbow-me/rainbowkit": "^2.1.3",
     "@tanstack/react-query": "^5.51.11",
@@ -16,5 +21,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
-  "devDependencies": {"@vitejs/plugin-react": "^4.3.1", "prettier": "^3.3.3"}
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "prettier": "^3.3.3"
+  }
 }

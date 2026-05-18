@@ -48,14 +48,14 @@ The review used both automated and manual methods:
 
 ## 4. Findings table
 
-| ID | Severity | Title | Location | Status |
-|---|---:|---|---|---|
-| S-01 | High | Reentrancy in push payout case study | `VulnerablePushPayout.sol` | Fixed in `FixedPullPayout.sol` |
-| S-02 | High | Unguarded treasury setter case study | `VulnerableAccessControl.sol` | Fixed in `FixedAccessControl.sol` |
-| S-03 | Medium | Stale oracle price can resolve market incorrectly | `ChainlinkPriceOracle.sol` | Fixed |
-| S-04 | Medium | Slippage-less AMM swaps expose users to sandwich attacks | `OutcomeAMM.sol` | Fixed |
-| S-05 | Low | Open executor role on Timelock | `Deploy.s.sol` | Acknowledged, intentional |
-| G-01 | Gas | Solidity sqrt loop more expensive than Yul version | `YulMath.sol` | Optimized |
+| ID   | Severity | Title                                                    | Location                      | Status                            |
+| ---- | -------: | -------------------------------------------------------- | ----------------------------- | --------------------------------- |
+| S-01 |     High | Reentrancy in push payout case study                     | `VulnerablePushPayout.sol`    | Fixed in `FixedPullPayout.sol`    |
+| S-02 |     High | Unguarded treasury setter case study                     | `VulnerableAccessControl.sol` | Fixed in `FixedAccessControl.sol` |
+| S-03 |   Medium | Stale oracle price can resolve market incorrectly        | `ChainlinkPriceOracle.sol`    | Fixed                             |
+| S-04 |   Medium | Slippage-less AMM swaps expose users to sandwich attacks | `OutcomeAMM.sol`              | Fixed                             |
+| S-05 |      Low | Open executor role on Timelock                           | `Deploy.s.sol`                | Acknowledged, intentional         |
+| G-01 |      Gas | Solidity sqrt loop more expensive than Yul version       | `YulMath.sol`                 | Optimized                         |
 
 ## 5. Detailed findings
 
@@ -114,26 +114,33 @@ If a role holder is compromised before governance transfer, the attacker could c
 ## 7. Governance attack analysis
 
 ### Flash-loan governance attacks
+
 The token uses ERC20Votes checkpointing. Voting power is measured at the proposal snapshot block, so tokens borrowed after the snapshot cannot influence that proposal.
 
 ### Whale attacks
+
 A large holder can still influence governance. The design mitigates this through quorum, proposal threshold, and Timelock delay, but it cannot remove plutocratic risk completely.
 
 ### Proposal spam
+
 The 1% proposal threshold makes spam expensive. Frontend can additionally filter proposals by proposer reputation, but contract-level threshold is the main defense.
 
 ### Timelock bypass
+
 All privileged production actions should be owned by Timelock. The verification script checks delay and governor proposer permissions.
 
 ## 8. Oracle attack analysis
 
 ### Price manipulation
+
 The protocol reads Chainlink aggregated feeds rather than a single DEX spot price. This reduces manipulation risk compared with direct pool reserves.
 
 ### Stale price
+
 The adapter reverts if `block.timestamp - updatedAt > maxAge`.
 
 ### Feed depeg or wrong feed
+
 Deployment documentation must specify exact feed addresses and descriptions. The post-deployment checklist includes manual feed verification.
 
 ## 9. External call and ERC20 review

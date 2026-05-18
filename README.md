@@ -10,32 +10,32 @@ TriadMarket is a full-stack decentralized prediction market protocol. Users can 
 
 ## Team ownership
 
-| Member | Primary ownership | Secondary responsibility |
-|---|---|---|
-| Mukhametkali Dias | CPMM AMM, ERC-1155 outcome token, ERC-4626 vault | Gas benchmark report |
-| Qaldyqan Yerzat | Governor, Timelock, ERC20Votes token, upgradeability | Security audit and Slither remediation |
-| Rudov Andrew | Frontend dApp, subgraph, CI/CD | Deployment scripts and documentation |
+| Member            | Primary ownership                                    | Secondary responsibility               |
+| ----------------- | ---------------------------------------------------- | -------------------------------------- |
+| Mukhametkali Dias | CPMM AMM, ERC-1155 outcome token, ERC-4626 vault     | Gas benchmark report                   |
+| Qaldyqan Yerzat   | Governor, Timelock, ERC20Votes token, upgradeability | Security audit and Slither remediation |
+| Rudov Andrew      | Frontend dApp, subgraph, CI/CD                       | Deployment scripts and documentation   |
 
 Every member must understand the full architecture for Q&A.
 
 ## Requirement matrix
 
-| Requirement | Implementation |
-|---|---|
-| UUPS V1 -> V2 upgrade | `UpgradeableTreasury.sol`, `UpgradeableTreasuryV2.sol`, `script/UpgradeTreasury.s.sol` |
-| Factory using CREATE and CREATE2 | `MarketFactory.sol` uses `new OutcomeAMM(...)` and `new PredictionMarket{salt: ...}(...)` |
-| Inline Yul benchmark | `YulMath.sol`; `benchmarks/yul-benchmark.md` |
-| ERC20Votes + ERC20Permit governance token | `TriadToken.sol` |
-| ERC-1155 | `OutcomeToken.sol` |
-| ERC-4626 vault | `ProtocolFeeVault.sol` |
-| DeFi primitive from scratch | `OutcomeAMM.sol` constant product x*y=k, 0.3% fee, slippage protection, LP token |
-| Chainlink oracle with staleness check | `ChainlinkPriceOracle.sol`, `mocks/MockV3Aggregator.sol` |
-| Subgraph with 4+ entities | `subgraph/schema.graphql`, `subgraph/src/mapping.ts` |
-| Governor + Timelock | `TriadGovernor.sol`, `Deploy.s.sol` |
-| L2 deployment | `script/Deploy.s.sol`, `script/VerifyPostDeploy.s.sol`, `deployments/*.json` |
-| 80+ tests planned | `test/` contains unit, fuzz, invariant, fork, upgrade, and vulnerability tests |
-| Security reports | `reports/security-audit.md`, `slither/slither-output.md` |
-| Frontend dApp | `frontend/` React + Wagmi/Viem |
+| Requirement                               | Implementation                                                                            |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------- |
+| UUPS V1 -> V2 upgrade                     | `UpgradeableTreasury.sol`, `UpgradeableTreasuryV2.sol`, `script/UpgradeTreasury.s.sol`    |
+| Factory using CREATE and CREATE2          | `MarketFactory.sol` uses `new OutcomeAMM(...)` and `new PredictionMarket{salt: ...}(...)` |
+| Inline Yul benchmark                      | `YulMath.sol`; `benchmarks/yul-benchmark.md`                                              |
+| ERC20Votes + ERC20Permit governance token | `TriadToken.sol`                                                                          |
+| ERC-1155                                  | `OutcomeToken.sol`                                                                        |
+| ERC-4626 vault                            | `ProtocolFeeVault.sol`                                                                    |
+| DeFi primitive from scratch               | `OutcomeAMM.sol` constant product x\*y=k, 0.3% fee, slippage protection, LP token         |
+| Chainlink oracle with staleness check     | `ChainlinkPriceOracle.sol`, `mocks/MockV3Aggregator.sol`                                  |
+| Subgraph with 4+ entities                 | `subgraph/schema.graphql`, `subgraph/src/mapping.ts`                                      |
+| Governor + Timelock                       | `TriadGovernor.sol`, `Deploy.s.sol`                                                       |
+| L2 deployment                             | `script/Deploy.s.sol`, `script/VerifyPostDeploy.s.sol`, `deployments/*.json`              |
+| 80+ tests planned                         | `test/` contains unit, fuzz, invariant, fork, upgrade, and vulnerability tests            |
+| Security reports                          | `reports/security-audit.md`, `slither/slither-output.md`                                  |
+| Frontend dApp                             | `frontend/` React + Wagmi/Viem                                                            |
 
 ## Quick start
 
