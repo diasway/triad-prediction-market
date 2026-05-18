@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {Script, console2} from "forge-std/Script.sol";
-import {TimelockController} from "@openzeppelin/contracts/governance/TimelockController.sol";
-import {TriadGovernor} from "../src/TriadGovernor.sol";
+import { Script, console2 } from "forge-std/Script.sol";
+import { TimelockController } from "@openzeppelin/contracts/governance/TimelockController.sol";
+import { TriadGovernor } from "../src/TriadGovernor.sol";
 
 contract VerifyPostDeploy is Script {
     function run() external view {

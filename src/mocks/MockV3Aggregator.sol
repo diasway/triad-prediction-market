@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {AggregatorV3Interface} from "../interfaces/AggregatorV3Interface.sol";
+import { AggregatorV3Interface } from "../interfaces/AggregatorV3Interface.sol";
 
 contract MockV3Aggregator is AggregatorV3Interface {
     uint8 public immutable override decimals;
@@ -29,11 +29,7 @@ contract MockV3Aggregator is AggregatorV3Interface {
         updatedAt = ts;
     }
 
-    function latestRoundData()
-        external
-        view
-        returns (uint80, int256, uint256, uint256, uint80)
-    {
+    function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) {
         return (roundId, answer, updatedAt, updatedAt, roundId);
     }
 }

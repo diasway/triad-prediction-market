@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {Script, console2} from "forge-std/Script.sol";
-import {TimelockController} from "@openzeppelin/contracts/governance/TimelockController.sol";
-import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
-import {TriadToken} from "../src/TriadToken.sol";
-import {TriadGovernor} from "../src/TriadGovernor.sol";
-import {ChainlinkPriceOracle} from "../src/ChainlinkPriceOracle.sol";
-import {MarketFactory} from "../src/MarketFactory.sol";
-import {ProtocolFeeVault} from "../src/ProtocolFeeVault.sol";
-import {UpgradeableTreasury} from "../src/UpgradeableTreasury.sol";
-import {MockERC20} from "../src/mocks/MockERC20.sol";
-import {MockV3Aggregator} from "../src/mocks/MockV3Aggregator.sol";
+import { Script, console2 } from "forge-std/Script.sol";
+import { TimelockController } from "@openzeppelin/contracts/governance/TimelockController.sol";
+import { ERC1967Proxy } from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
+import { TriadToken } from "../src/TriadToken.sol";
+import { TriadGovernor } from "../src/TriadGovernor.sol";
+import { ChainlinkPriceOracle } from "../src/ChainlinkPriceOracle.sol";
+import { MarketFactory } from "../src/MarketFactory.sol";
+import { ProtocolFeeVault } from "../src/ProtocolFeeVault.sol";
+import { UpgradeableTreasury } from "../src/UpgradeableTreasury.sol";
+import { MockERC20 } from "../src/mocks/MockERC20.sol";
+import { MockV3Aggregator } from "../src/mocks/MockV3Aggregator.sol";
 
 contract Deploy is Script {
     uint256 internal constant MIN_DELAY = 2 days;
@@ -36,18 +36,22 @@ contract Deploy is Script {
         address[] memory proposers = new address[](0);
         address[] memory executors = new address[](1);
         executors[0] = address(0);
-        TimelockController timelock = new TimelockController(MIN_DELAY, proposers, executors, deployer);
+        TimelockController timelock =
+            new TimelockController(MIN_DELAY, proposers, executors, deployer);
         TriadGovernor governor = new TriadGovernor(token, timelock);
 
         timelock.grantRole(timelock.PROPOSER_ROLE(), address(governor));
         timelock.grantRole(timelock.CANCELLER_ROLE(), address(governor));
         timelock.revokeRole(timelock.DEFAULT_ADMIN_ROLE(), deployer);
 
-        MarketFactory factory = new MarketFactory(address(timelock), address(collateral), address(oracle));
+        MarketFactory factory =
+            new MarketFactory(address(timelock), address(collateral), address(oracle));
         ProtocolFeeVault vault = new ProtocolFeeVault(collateral, address(timelock));
 
         UpgradeableTreasury impl = new UpgradeableTreasury();
-        ERC1967Proxy proxy = new ERC1967Proxy(address(impl), abi.encodeCall(UpgradeableTreasury.initialize, (address(timelock))));
+        ERC1967Proxy proxy = new ERC1967Proxy(
+            address(impl), abi.encodeCall(UpgradeableTreasury.initialize, (address(timelock)))
+        );
 
         vm.stopBroadcast();
 

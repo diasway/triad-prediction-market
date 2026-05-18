@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {Test} from "forge-std/Test.sol";
-import {TimelockController} from "@openzeppelin/contracts/governance/TimelockController.sol";
-import {TriadToken} from "../src/TriadToken.sol";
-import {TriadGovernor} from "../src/TriadGovernor.sol";
-import {MockERC20} from "../src/mocks/MockERC20.sol";
-import {MockV3Aggregator} from "../src/mocks/MockV3Aggregator.sol";
-import {ChainlinkPriceOracle} from "../src/ChainlinkPriceOracle.sol";
-import {MarketFactory} from "../src/MarketFactory.sol";
-import {PredictionMarket} from "../src/PredictionMarket.sol";
-import {OutcomeAMM} from "../src/OutcomeAMM.sol";
-import {OutcomeToken} from "../src/OutcomeToken.sol";
-import {ProtocolFeeVault} from "../src/ProtocolFeeVault.sol";
+import { Test } from "forge-std/Test.sol";
+import { TimelockController } from "@openzeppelin/contracts/governance/TimelockController.sol";
+import { TriadToken } from "../src/TriadToken.sol";
+import { TriadGovernor } from "../src/TriadGovernor.sol";
+import { MockERC20 } from "../src/mocks/MockERC20.sol";
+import { MockV3Aggregator } from "../src/mocks/MockV3Aggregator.sol";
+import { ChainlinkPriceOracle } from "../src/ChainlinkPriceOracle.sol";
+import { MarketFactory } from "../src/MarketFactory.sol";
+import { PredictionMarket } from "../src/PredictionMarket.sol";
+import { OutcomeAMM } from "../src/OutcomeAMM.sol";
+import { OutcomeToken } from "../src/OutcomeToken.sol";
+import { ProtocolFeeVault } from "../src/ProtocolFeeVault.sol";
 
 abstract contract BaseSetup is Test {
     address internal alice = address(0xA11CE);
@@ -41,13 +41,18 @@ abstract contract BaseSetup is Test {
 
         address[] memory receivers = new address[](3);
         uint256[] memory amounts = new uint256[](3);
-        receivers[0] = admin; amounts[0] = 8_000_000 ether;
-        receivers[1] = alice; amounts[1] = 1_000_000 ether;
-        receivers[2] = bob; amounts[2] = 1_000_000 ether;
+        receivers[0] = admin;
+        amounts[0] = 8_000_000 ether;
+        receivers[1] = alice;
+        amounts[1] = 1_000_000 ether;
+        receivers[2] = bob;
+        amounts[2] = 1_000_000 ether;
         triad = new TriadToken(admin, receivers, amounts);
         triad.delegate(admin);
-        vm.prank(alice); triad.delegate(alice);
-        vm.prank(bob); triad.delegate(bob);
+        vm.prank(alice);
+        triad.delegate(alice);
+        vm.prank(bob);
+        triad.delegate(bob);
 
         address[] memory proposers = new address[](0);
         address[] memory executors = new address[](1);
@@ -59,7 +64,8 @@ abstract contract BaseSetup is Test {
         timelock.revokeRole(timelock.DEFAULT_ADMIN_ROLE(), admin);
 
         factory = new MarketFactory(admin, address(usdc), address(oracle));
-        (uint256 marketId, address m, address a) = factory.createMarket(bytes32("ETH3000"), 3000e8, 1 days);
+        (uint256 marketId, address m, address a) =
+            factory.createMarket(bytes32("ETH3000"), 3000e8, 1 days);
         market = PredictionMarket(m);
         amm = OutcomeAMM(a);
         outcome = factory.outcomeToken();

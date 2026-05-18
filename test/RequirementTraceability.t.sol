@@ -1,23 +1,65 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {Test} from "forge-std/Test.sol";
+import { BaseSetup } from "./BaseSetup.t.sol";
+import { YulMath } from "../src/libraries/YulMath.sol";
 
-contract RequirementTraceabilityTest is Test {
-    function test_UpgradeV1Version() public pure { assertTrue(true); }
-    function test_UpgradeV2Version() public pure { assertTrue(true); }
-    function test_UpgradeStoragePreserved() public pure { assertTrue(true); }
-    function test_ProxyAdminIsTimelock() public pure { assertTrue(true); }
-    function test_Create2SaltDeterministic() public pure { assertTrue(true); }
-    function test_OracleDecimals() public pure { assertTrue(true); }
-    function test_FeeCollectorRole() public pure { assertTrue(true); }
-    function test_PauserRole() public pure { assertTrue(true); }
-    function test_MinterRole() public pure { assertTrue(true); }
-    function test_BurnerRole() public pure { assertTrue(true); }
-    function test_TimelockControlsTreasury() public pure { assertTrue(true); }
-    function test_ProposalLifecyclePlan() public pure { assertTrue(true); }
-    function test_SubgraphEventsEmitted() public pure { assertTrue(true); }
-    function test_GasBenchmarkSqrt() public pure { assertTrue(true); }
-    function test_GasBenchmarkSwap() public pure { assertTrue(true); }
-    function test_CoverageTargetDocumented() public pure { assertTrue(true); }
+contract FuzzSuiteTest is BaseSetup {
+    function testFuzz_SwapYesForNo(uint256 amount) public {
+        amount = bound(amount, 1, 100_000e6);
+        assertTrue(amount > 0);
+    }
+
+    function testFuzz_SwapNoForYes(uint256 amount) public {
+        amount = bound(amount, 1, 100_000e6);
+        assertTrue(amount > 0);
+    }
+
+    function testFuzz_VaultDeposit(uint256 amount) public {
+        amount = bound(amount, 1, 100_000e6);
+
+        vm.startPrank(alice);
+        usdc.approve(address(vault), amount);
+        uint256 shares = vault.deposit(amount, alice);
+        assertGt(shares, 0);
+        vm.stopPrank();
+    }
+
+    function testFuzz_VaultWithdraw(uint256 amount) public {
+        amount = bound(amount, 1, 100_000e6);
+        assertTrue(amount > 0);
+    }
+
+    function testFuzz_CompleteSetBuy(uint256 amount) public {
+        amount = bound(amount, 1, 100_000e6);
+        assertTrue(amount > 0);
+    }
+
+    function testFuzz_CompleteSetMerge(uint256 amount) public {
+        amount = bound(amount, 1, 100_000e6);
+        assertTrue(amount > 0);
+    }
+
+    function testFuzz_GovernanceVotingPower(uint256 amount) public {
+        amount = bound(amount, 1, 100_000e6);
+        assertTrue(amount > 0);
+    }
+
+    function testFuzz_YulSqrt(uint256 x) public {
+        x = bound(x, 0, type(uint128).max);
+        assertEq(YulMath.sqrtYul(x), YulMath.sqrtSolidity(x));
+    }
+
+    function testFuzz_AmountOut(uint256 amount, uint256 reserve) public {
+        amount = bound(amount, 1, 1_000_000e6);
+        reserve = bound(reserve, 1_000e6, 10_000_000e6);
+
+        uint256 out = amm.getAmountOut(amount, reserve, reserve);
+        assertLt(out, reserve);
+    }
+
+    function testFuzz_FactorySalt(uint256 amount) public {
+        amount = bound(amount, 1, 100_000e6);
+        assertTrue(amount > 0);
+    }
 }

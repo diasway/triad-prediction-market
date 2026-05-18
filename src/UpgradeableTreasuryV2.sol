@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {UpgradeableTreasury} from "./UpgradeableTreasury.sol";
+import { UpgradeableTreasury } from "./UpgradeableTreasury.sol";
 
 contract UpgradeableTreasuryV2 is UpgradeableTreasury {
     event EmergencyAccountingCorrection(address indexed token, uint256 oldValue, uint256 newValue);

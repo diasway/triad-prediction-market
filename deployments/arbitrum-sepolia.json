@@ -1,0 +1,14 @@
+{
+  "network": "arbitrum-sepolia",
+  "chainId": 421614,
+  "deployer": "0xfEe7C8555ffcB66804F7276B8B7a7bD5Ef0907d4",
+  "triadToken": "0x2E2C8442054B322e2Dd0983F3DC4D5bDDA1a372d",
+  "timelock": "0x5B9931D4210e5E7496bCE7FD63E0Ea68C07dBBdB",
+  "governor": "0x2df4abc558FD0Fe0989fe9B35c82eFC4E8E6621C",
+  "collateral": "0x507D68dc24aBcf7a70a70a2430952DCa91030a2f",
+  "oracle": "0xA04D0cB59978e5327F53D62955EB1E002F792A2F",
+  "factory": "0xdCd546257b906554dAfAdC0EeCB4B27161AE1cEC",
+  "feeVault": "0x4986ef712BEc87dB05681Bd93963A9B7A28C06E2",
+  "treasuryProxy": "0x93d4C4e26971335047639FBbc26d2725d1410F98",
+  "verified": true
+}

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
-import {OutcomeToken} from "./OutcomeToken.sol";
-import {PredictionMarket} from "./PredictionMarket.sol";
-import {OutcomeAMM} from "./OutcomeAMM.sol";
+import { AccessControl } from "@openzeppelin/contracts/access/AccessControl.sol";
+import { OutcomeToken } from "./OutcomeToken.sol";
+import { PredictionMarket } from "./PredictionMarket.sol";
+import { OutcomeAMM } from "./OutcomeAMM.sol";
 
 contract MarketFactory is AccessControl {
     bytes32 public constant MARKET_CREATOR_ROLE = keccak256("MARKET_CREATOR_ROLE");
@@ -24,7 +24,9 @@ contract MarketFactory is AccessControl {
 
     mapping(uint256 => MarketRecord) public markets;
 
-    event MarketCreated(uint256 indexed marketId, address market, address amm, uint256 yesId, uint256 noId);
+    event MarketCreated(
+        uint256 indexed marketId, address market, address amm, uint256 yesId, uint256 noId
+    );
 
     constructor(address admin, address collateral_, address oracle_) {
         require(admin != address(0) && collateral_ != address(0) && oracle_ != address(0), "ZERO");
@@ -45,7 +47,7 @@ contract MarketFactory is AccessControl {
         uint256 yesId = marketId * 2;
         uint256 noId = marketId * 2 + 1;
 
-        PredictionMarket predictionMarket = new PredictionMarket{salt: salt}(
+        PredictionMarket predictionMarket = new PredictionMarket{ salt: salt }(
             msg.sender,
             collateral,
             address(outcomeToken),
@@ -56,18 +58,14 @@ contract MarketFactory is AccessControl {
             disputeWindowSeconds
         ); // CREATE2
 
-        OutcomeAMM outcomeAmm = new OutcomeAMM(
-            msg.sender,
-            collateral,
-            address(outcomeToken),
-            yesId,
-            noId
-        ); // CREATE
+        OutcomeAMM outcomeAmm =
+            new OutcomeAMM(msg.sender, collateral, address(outcomeToken), yesId, noId); // CREATE
 
         outcomeToken.grantRole(outcomeToken.MINTER_ROLE(), address(predictionMarket));
         outcomeToken.grantRole(outcomeToken.BURNER_ROLE(), address(predictionMarket));
 
-        markets[marketId] = MarketRecord(address(predictionMarket), address(outcomeAmm), yesId, noId, salt);
+        markets[marketId] =
+            MarketRecord(address(predictionMarket), address(outcomeAmm), yesId, noId, salt);
         emit MarketCreated(marketId, address(predictionMarket), address(outcomeAmm), yesId, noId);
         return (marketId, address(predictionMarket), address(outcomeAmm));
     }
@@ -82,9 +80,19 @@ contract MarketFactory is AccessControl {
         uint256 noId = marketId * 2 + 1;
         bytes memory bytecode = abi.encodePacked(
             type(PredictionMarket).creationCode,
-            abi.encode(msg.sender, collateral, address(outcomeToken), oracle, yesId, noId, threshold, disputeWindowSeconds)
+            abi.encode(
+                msg.sender,
+                collateral,
+                address(outcomeToken),
+                oracle,
+                yesId,
+                noId,
+                threshold,
+                disputeWindowSeconds
+            )
         );
-        bytes32 hash = keccak256(abi.encodePacked(bytes1(0xff), address(this), salt, keccak256(bytecode)));
+        bytes32 hash =
+            keccak256(abi.encodePacked(bytes1(0xff), address(this), salt, keccak256(bytecode)));
         predicted = address(uint160(uint256(hash)));
     }
 }
