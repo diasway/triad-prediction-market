@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "lint": "solhint 'src/**/*.sol' && prettier --check .",
+    "lint": "solhint \"src/**/*.sol\" && prettier --check .",
     "format": "prettier --write .",
     "slither": "slither . --config-file slither.config.json",
     "test": "forge test -vvv",
-    "coverage": "forge coverage --report lcov"
+    "coverage": "forge coverage --report lcov --no-match-coverage \"script|test\""
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
